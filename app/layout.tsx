@@ -1,11 +1,23 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Dancing_Script, Caveat, Lato } from "next/font/google";
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const dancing = Dancing_Script({
+  variable: "--font-dancing",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "600", "700"],
+});
+
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const lato = Lato({
+  variable: "--font-lato",
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -20,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${outfit.variable} antialiased`}>
+    <html lang="en" className={`${dancing.variable} ${caveat.variable} ${lato.variable} antialiased`}>
       <body>{children}</body>
     </html>
   );
