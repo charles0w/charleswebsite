@@ -15,82 +15,57 @@ interface Props {
 
 export default function SketchPage({ children, pageNum, id, className = "" }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const edgeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!ref.current) return;
 
-    /* Page flip: section folds down from slight angle as it enters */
-    gsap.fromTo(
-      ref.current,
-      {
-        rotateX: -6,
-        transformOrigin: "top center",
-        opacity: 0.6,
-        y: 12,
-      },
-      {
-        rotateX: 0,
-        opacity: 1,
-        y: 0,
-        duration: 0.65,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ref.current,
-          start: "top 88%",
-        },
-      }
-    );
+    /* Reduced-motion: reveal immediately so content is never stuck hidden */
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      gsap.set(ref.current, { opacity: 1, y: 0 });
+      return;
+    }
 
-    /* Animate the top "paper edge" strip */
-    if (edgeRef.current) {
+    /* Chrome section reveal: soft fade + slight rise as the band scrolls in */
+    const ctx = gsap.context(() => {
       gsap.fromTo(
-        edgeRef.current,
-        { scaleX: 0, transformOrigin: "left center" },
+        ref.current,
+        { opacity: 0, y: 28 },
         {
-          scaleX: 1,
-          duration: 0.5,
-          ease: "power2.out",
-          scrollTrigger: { trigger: ref.current, start: "top 88%" },
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ref.current,
+            start: "top 86%",
+          },
         }
       );
-    }
+    });
+
+    return () => ctx.revert();
   }, []);
 
   return (
-    <div style={{ perspective: "1400px" }}>
-      {/* Paper edge strip — visual cue of a page turning */}
-      <div
-        ref={edgeRef}
-        style={{
-          height: 6,
-          background: `linear-gradient(90deg, var(--paper-3) 0%, var(--paper-2) 100%)`,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        }}
-      />
+    <section
+      ref={ref}
+      id={id}
+      className={`relative ${className}`}
+      style={{ background: "transparent" }}
+    >
+      {/* Band separator — thin chrome hairline at the top of the section */}
+      <div className="divider" />
 
-      <div
-        ref={ref}
-        id={id}
-        className={`sketch-section ${className}`}
+      {/* Mono section index in the corner — signature OS detail */}
+      <span
+        className="label absolute z-10"
+        style={{ top: "1.75rem", right: "1.75rem" }}
       >
-        {/* Page number */}
-        <span className="pg-num absolute top-5 right-7 z-10">
-          pg.&nbsp;{pageNum.toString().padStart(2, "0")}
-        </span>
+        {pageNum.toString().padStart(2, "0")} /
+      </span>
 
-        {/* Folded corner decoration */}
-        <svg
-          width="40" height="40"
-          viewBox="0 0 40 40"
-          style={{ position: "absolute", bottom: 0, right: 0, opacity: 0.18, pointerEvents: "none" }}
-        >
-          <polygon points="40,40 0,40 40,0" fill="var(--pencil)" />
-          <line x1="0" y1="40" x2="40" y2="0" stroke="var(--sketch-border)" strokeWidth="1" />
-        </svg>
-
-        {children}
-      </div>
-    </div>
+      {children}
+    </section>
   );
 }

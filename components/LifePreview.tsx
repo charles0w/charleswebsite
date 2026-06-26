@@ -3,49 +3,52 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Image as ImageIcon, ArrowUpRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* ── artwork placeholder slot ── */
+/* ── chrome / glass media frame placeholder ── */
 function ArtworkSlot({
   label,
   note,
   ratio = "4/3",
-  rotate = "0deg",
+  color,
 }: {
   label: string;
   note: string;
   ratio?: string;
-  rotate?: string;
+  color: string;
 }) {
   return (
     <div
-      className="artwork-slot"
-      style={{ aspectRatio: ratio, transform: `rotate(${rotate})` }}
+      className="relative w-full h-full flex flex-col items-center justify-center gap-3 text-center"
+      style={{
+        aspectRatio: ratio,
+        minHeight: 140,
+        borderRadius: 10,
+        border: "1px dashed var(--line-2)",
+        background: "var(--glass)",
+        overflow: "hidden",
+        padding: "0 14px",
+      }}
     >
-      {/* Tape strip at top */}
-      <div
+      {/* inner accent glow */}
+      <span
+        aria-hidden="true"
         style={{
           position: "absolute",
-          top: -10,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: 52,
-          height: 18,
-          background: "var(--tape)",
-          borderRadius: 2,
+          inset: 0,
+          background: `radial-gradient(120px 90px at 50% 38%, color-mix(in srgb, ${color} 16%, transparent), transparent 72%)`,
+          pointerEvents: "none",
         }}
       />
-      <svg width="32" height="32" viewBox="0 0 32 32" style={{ opacity: 0.4 }}>
-        <path d="M4 28 L12 8 L20 20 L25 14 L30 28 Z" stroke="var(--pencil)" strokeWidth="1.5" fill="none" strokeLinejoin="round" />
-        <circle cx="24" cy="10" r="3" stroke="var(--pencil)" strokeWidth="1.2" fill="none" />
-      </svg>
-      <p style={{ fontSize: "0.95rem", lineHeight: 1.4, padding: "0 12px" }}>
+      <ImageIcon size={26} strokeWidth={1.5} style={{ color: "var(--txt-dim)", position: "relative" }} />
+      <span className="mono" style={{ color: "var(--txt-dim)", fontSize: "0.72rem", letterSpacing: "0.06em", position: "relative" }}>
         [ {label} ]
-      </p>
-      <p style={{ fontSize: "0.7rem", opacity: 0.55 }}>
+      </span>
+      <span className="mono" style={{ color: "var(--txt-faint)", fontSize: "0.62rem", lineHeight: 1.4, position: "relative" }}>
         {note}
-      </p>
+      </span>
     </div>
   );
 }
@@ -56,30 +59,27 @@ const interests = [
     sub: "Redline Car Club · Track Days · Thunderhill",
     description:
       "Co-founded Redline at UC Berkeley. Monthly meets at the Berkeley Marina, track days at Thunderhill Raceway, annual car show.",
-    color: "#C44444",
+    color: "var(--red)",
     href: "/life#cars",
-    artwork: { label: "car sketch", note: "drop art in /public/art/cars.jpg", ratio: "4/3", rotate: "-1.5deg" },
-    rotate: "-0.6deg",
+    artwork: { label: "car render", note: "drop art in /public/art/cars.jpg", ratio: "4/3" },
   },
   {
     title: "Trading Cards",
     sub: "Pokemon · One Piece · TCG Arbitrage",
     description:
       "Collector and arbitrageur. Built tools to find undervalued cards on eBay vs TCGPlayer — same pattern recognition as the trading bot.",
-    color: "#9B6A1A",
+    color: "var(--gold)",
     href: "/life#cards",
-    artwork: { label: "card sketch", note: "drop art in /public/art/cards.jpg", ratio: "3/4", rotate: "1deg" },
-    rotate: "0.4deg",
+    artwork: { label: "card render", note: "drop art in /public/art/cards.jpg", ratio: "3/4" },
   },
   {
     title: "Finance",
     sub: "Options · Prediction Markets · Quant Research",
     description:
       "Building systematic edges across markets — options research via Claude Opus 4.7, Polymarket copy-trading with LLM thesis gating.",
-    color: "#1A6B4A",
+    color: "var(--green)",
     href: "/life#finance",
-    artwork: { label: "chart sketch", note: "drop art in /public/art/finance.jpg", ratio: "4/3", rotate: "-0.8deg" },
-    rotate: "-0.3deg",
+    artwork: { label: "chart render", note: "drop art in /public/art/finance.jpg", ratio: "4/3" },
   },
 ];
 
@@ -97,7 +97,7 @@ export default function LifePreview() {
 
       cardsRef.current.forEach((card, i) => {
         gsap.fromTo(card,
-          { opacity: 0, y: 28, rotate: 0 },
+          { opacity: 0, y: 28 },
           { opacity: 1, y: 0, duration: 0.8, delay: i * 0.12, ease: "power3.out",
             scrollTrigger: { trigger: card, start: "top 88%" } }
         );
@@ -111,21 +111,40 @@ export default function LifePreview() {
       ref={sectionRef}
       id="life-preview"
       className="relative w-full"
-      style={{ paddingBlock: "clamp(5rem, 12vw, 9rem)", paddingLeft: "clamp(5rem, 10vw, 9rem)", paddingRight: "clamp(2rem, 6vw, 5rem)" }}
+      style={{
+        paddingBlock: "clamp(5rem, 12vw, 9rem)",
+        paddingLeft: "clamp(5rem, 10vw, 9rem)",
+        paddingRight: "clamp(2rem, 6vw, 5rem)",
+        borderTop: "1px solid var(--line)",
+      }}
     >
       <div className="max-w-screen-xl mx-auto">
         {/* Header */}
         <div ref={headRef} className="mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <p className="text-xs tracking-[0.2em] uppercase mb-3" style={{ fontFamily: "var(--font-caveat)", color: "var(--pencil)" }}>
+            <p className="label mb-4 flex items-center gap-2">
+              <span style={{ width: 18, height: 1, background: "var(--line-3)", display: "inline-block" }} />
               Beyond the Code
             </p>
-            <h2 className="sketch-ul" style={{ fontFamily: "var(--font-caveat)", fontSize: "clamp(2.4rem, 5vw, 4.2rem)", color: "var(--ink)" }}>
+            <h2
+              className="chrome-text"
+              style={{
+                fontFamily: "var(--sans)",
+                fontWeight: 700,
+                fontSize: "clamp(2.2rem, 5vw, 4rem)",
+                letterSpacing: "-0.03em",
+                lineHeight: 1.04,
+              }}
+            >
               There&rsquo;s more to me.
             </h2>
           </div>
-          <a href="/life" style={{ fontFamily: "var(--font-caveat)", fontSize: "1.05rem", color: "var(--blue-ink)", textDecoration: "none" }}>
-            Full life page →
+          <a
+            href="/life"
+            className="btn-ghost"
+          >
+            Full life page
+            <ArrowUpRight size={14} strokeWidth={1.75} />
           </a>
         </div>
 
@@ -136,45 +155,65 @@ export default function LifePreview() {
               key={item.title}
               href={item.href}
               ref={(el) => { if (el) cardsRef.current[i] = el; }}
-              className="life-card p-6 flex flex-col gap-4"
-              style={{ transform: `rotate(${item.rotate})`, minHeight: 360 }}
+              className="card edge-top p-6 flex flex-col gap-4"
+              style={{ minHeight: 360, textDecoration: "none" }}
             >
               {/* Colored top accent line */}
-              <div className="h-1.5 w-full rounded-full -mt-1 -mx-0 mb-1" style={{ background: item.color, opacity: 0.75 }} />
+              <div
+                className="w-full"
+                style={{
+                  height: 2,
+                  borderRadius: 2,
+                  background: `linear-gradient(90deg, transparent, ${item.color}, transparent)`,
+                  boxShadow: `0 0 12px -2px ${item.color}`,
+                }}
+              />
 
-              {/* Artwork slot */}
+              {/* Media frame */}
               <div className="relative flex-1 min-h-0" style={{ minHeight: 140 }}>
                 <ArtworkSlot
                   label={item.artwork.label}
                   note={item.artwork.note}
                   ratio={item.artwork.ratio}
-                  rotate={item.artwork.rotate}
+                  color={item.color}
                 />
               </div>
 
               {/* Info */}
               <div>
-                <h3 style={{ fontFamily: "var(--font-caveat)", fontSize: "1.7rem", color: item.color, lineHeight: 1.1, marginBottom: 2 }}>
+                <h3
+                  style={{
+                    fontFamily: "var(--sans)",
+                    fontWeight: 600,
+                    fontSize: "1.4rem",
+                    letterSpacing: "-0.01em",
+                    color: item.color,
+                    lineHeight: 1.1,
+                    marginBottom: 8,
+                  }}
+                >
                   {item.title}
                 </h3>
-                <p className="text-xs uppercase tracking-[0.1em] mb-3" style={{ color: "var(--pencil)", fontFamily: "var(--font-caveat)" }}>
-                  {item.sub}
-                </p>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)", fontFamily: "var(--font-lato)" }}>
+                <p className="label mb-3">{item.sub}</p>
+                <p className="text-sm" style={{ color: "var(--txt-mid)", lineHeight: 1.65 }}>
                   {item.description}
                 </p>
               </div>
 
-              <span style={{ fontFamily: "var(--font-caveat)", fontSize: "1rem", color: item.color }}>
-                See more →
+              <span
+                className="mono inline-flex items-center gap-1.5"
+                style={{ fontSize: "0.72rem", letterSpacing: "0.08em", textTransform: "uppercase", color: item.color }}
+              >
+                See more
+                <ArrowUpRight size={13} strokeWidth={1.75} />
               </span>
             </a>
           ))}
         </div>
 
-        {/* Sketch note at bottom */}
-        <p className="mt-8 text-center" style={{ fontFamily: "var(--font-caveat)", fontSize: "0.95rem", color: "var(--pencil)", opacity: 0.6 }}>
-          * artwork placeholders — drop your sketches in /public/art/ and update the image paths
+        {/* Note at bottom */}
+        <p className="mono mt-10 text-center" style={{ color: "var(--txt-dim)", fontSize: "0.7rem", letterSpacing: "0.04em" }}>
+          * media placeholders — drop your renders in /public/art/ and update the image paths
         </p>
       </div>
     </section>

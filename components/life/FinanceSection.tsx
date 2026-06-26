@@ -11,21 +11,21 @@ const pillars = [
     title: "Options Research",
     description:
       "Claude Opus 4.7 as the analyst layer on a deterministic signal pipeline. Benchmark gate before any live capital. Currently in backtesting.",
-    accent: "#10B981",
+    accent: "var(--green)",
     metric: "AI-driven",
   },
   {
     title: "Prediction Markets",
     description:
       "Polymarket copy-trading with an LLM event-driven thesis layer. Two-signal intersection rule — smart wallet signal must agree with an independent model thesis.",
-    accent: "#06B6D4",
+    accent: "var(--teal)",
     metric: "Multi-signal",
   },
   {
     title: "Card Arbitrage",
     description:
       "Systematic inefficiencies in secondary card markets. eBay vs TCGPlayer delta tracking for Japanese pulls, sealed products, and graded slabs.",
-    accent: "#F59E0B",
+    accent: "var(--gold)",
     metric: "Market edges",
   },
 ];
@@ -60,26 +60,29 @@ export default function FinanceSection() {
       ref={sectionRef}
       className="relative w-full"
       style={{
-        background: "var(--bg2)",
+        background: "var(--bg-2)",
         paddingBlock: "clamp(5rem, 12vw, 9rem)",
-        borderTop: "1px solid var(--border)",
+        borderTop: "1px solid var(--line)",
       }}
     >
       {/* Green ambient glow */}
       <div
         className="absolute bottom-0 right-0 w-96 h-96 translate-x-1/2 translate-y-1/2 rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%)", filter: "blur(80px)" }}
+        style={{ background: "radial-gradient(circle, rgba(124,217,168,0.08) 0%, transparent 70%)", filter: "blur(80px)" }}
       />
 
       <div className="max-w-screen-xl mx-auto px-6 md:px-12">
         <div ref={headRef} className="mb-14">
-          <p className="text-xs font-semibold tracking-[0.25em] uppercase mb-4" style={{ color: "#10B981" }}>
+          <p className="label mb-4" style={{ color: "var(--green)" }}>
             Finance &amp; Trading
           </p>
-          <h2 className="font-black leading-[1.05] tracking-[-0.025em] max-w-xl" style={{ fontSize: "clamp(2.4rem, 5vw, 4.2rem)" }}>
+          <h2
+            className="leading-[1.05] tracking-[-0.025em] max-w-xl"
+            style={{ fontFamily: "var(--sans)", fontWeight: 700, color: "var(--white)", fontSize: "clamp(2.4rem, 5vw, 4.2rem)" }}
+          >
             Finding edges everywhere.
           </h2>
-          <p className="mt-6 text-base leading-relaxed max-w-2xl" style={{ color: "var(--muted)" }}>
+          <p className="mt-6 text-base leading-relaxed max-w-2xl" style={{ color: "var(--txt-mid)" }}>
             Whether it&rsquo;s options markets, prediction markets, or trading card markets — the
             framework is the same: find systematic inefficiencies, build tools to exploit them
             faster than the market corrects, and gate everything behind rigorous validation
@@ -92,21 +95,21 @@ export default function FinanceSection() {
             <div
               key={p.title}
               ref={(el) => { if (el) pillarsRef.current[i] = el; }}
-              className="rounded-2xl p-7 flex flex-col gap-4"
-              style={{
-                background: "var(--bg3)",
-                border: "1px solid var(--border)",
-                backgroundImage: `linear-gradient(135deg, ${p.accent}12 0%, rgba(13,13,13,0) 70%)`,
-              }}
+              className="card edge-top p-7 flex flex-col gap-4"
+              style={{ backgroundImage: `linear-gradient(135deg, color-mix(in srgb, ${p.accent} 12%, transparent) 0%, transparent 70%)` }}
             >
-              <div
-                className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold tracking-[0.15em] uppercase self-start"
-                style={{ background: `${p.accent}20`, color: p.accent }}
+              <span
+                className="chip self-start"
+                style={{
+                  color: p.accent,
+                  background: `color-mix(in srgb, ${p.accent} 14%, transparent)`,
+                  borderColor: `color-mix(in srgb, ${p.accent} 32%, transparent)`,
+                }}
               >
                 {p.metric}
-              </div>
-              <h3 className="font-bold text-white text-xl tracking-tight">{p.title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
+              </span>
+              <h3 className="font-semibold text-xl tracking-tight" style={{ color: "var(--white)" }}>{p.title}</h3>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--txt-mid)" }}>
                 {p.description}
               </p>
             </div>

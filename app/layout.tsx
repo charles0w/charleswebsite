@@ -1,29 +1,25 @@
 import type { Metadata } from "next";
-import { Dancing_Script, Caveat, Lato } from "next/font/google";
+import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-const dancing = Dancing_Script({
-  variable: "--font-dancing",
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 
-const caveat = Caveat({
-  variable: "--font-caveat",
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const lato = Lato({
-  variable: "--font-lato",
-  subsets: ["latin"],
-  weight: ["300", "400", "700"],
+  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Charles Ow — Builder, Developer, Gearhead",
+  title: "Charles Ow — Builder · Developer · Gearhead",
   description:
-    "UC Berkeley student building AI tools, startups, and websites. Founder of Redline car club.",
+    "UC Berkeley student building AI tools, trading systems, and ventures. Founder of Redline car club. A chrome-and-black command center for everything I ship.",
 };
 
 export default function RootLayout({
@@ -32,7 +28,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dancing.variable} ${caveat.variable} ${lato.variable} antialiased`}>
+    <html
+      lang="en"
+      className={`${plexSans.variable} ${plexMono.variable} antialiased`}
+    >
       <body>{children}</body>
     </html>
   );

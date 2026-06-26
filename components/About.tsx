@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowUpRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -60,103 +61,121 @@ export default function About() {
       id="about"
       ref={sectionRef}
       className="relative w-full"
-      style={{ paddingBlock: "clamp(5rem, 12vw, 9rem)", paddingLeft: "clamp(5rem, 10vw, 9rem)", paddingRight: "clamp(2rem, 6vw, 5rem)" }}
+      style={{
+        paddingBlock: "clamp(5rem, 12vw, 9rem)",
+        paddingLeft: "clamp(5rem, 10vw, 9rem)",
+        paddingRight: "clamp(2rem, 6vw, 5rem)",
+        borderTop: "1px solid var(--line)",
+      }}
     >
       <div className="max-w-screen-xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 
         {/* Left — word scrub + bio + skills */}
         <div>
           {/* Section label */}
-          <p className="text-xs tracking-[0.2em] uppercase mb-8" style={{ fontFamily: "var(--font-caveat)", color: "var(--pencil)" }}>
+          <p className="label mb-8 flex items-center gap-2">
+            <span style={{ width: 18, height: 1, background: "var(--line-3)", display: "inline-block" }} />
             About Me
           </p>
 
-          {/* Scrub statement in Caveat */}
-          <h2 style={{ fontFamily: "var(--font-caveat)", fontSize: "clamp(1.9rem, 3.5vw, 3.2rem)", lineHeight: 1.2, color: "var(--ink)" }}>
+          {/* Scrub statement — words reveal faint → bright */}
+          <h2
+            style={{
+              fontFamily: "var(--sans)",
+              fontWeight: 600,
+              fontSize: "clamp(1.75rem, 3.2vw, 3rem)",
+              lineHeight: 1.25,
+              letterSpacing: "-0.02em",
+              color: "var(--white)",
+              maxWidth: "20ch",
+            }}
+          >
             {words.map((word, i) => (
               <span
                 key={i}
                 ref={(el) => { if (el) wordsRef.current[i] = el; }}
-                className="inline-block mr-[0.25em]"
-                style={{ opacity: 0.07 }}
+                className="inline-block"
+                style={{ opacity: 0.07, marginRight: "0.3em" }}
               >
                 {word}
               </span>
             ))}
           </h2>
 
-          <p className="mt-7 leading-relaxed text-sm max-w-md" style={{ color: "var(--ink-mid)", fontFamily: "var(--font-lato)" }}>
+          <p
+            className="mt-8 max-w-md"
+            style={{ color: "var(--txt-mid)", lineHeight: 1.7, fontSize: "0.95rem" }}
+          >
             Based at UC Berkeley, I study and build in parallel — AI trading systems,
             browser extensions, website automation pipelines, and whatever else needs
             to exist. On weekends I run Redline, the car club I co-founded on campus.
           </p>
 
-          {/* Skills as hand-drawn tags */}
-          <div className="mt-8">
-            <p className="text-xs tracking-[0.15em] uppercase mb-3" style={{ fontFamily: "var(--font-caveat)", color: "var(--pencil)" }}>
-              Stack
-            </p>
+          {/* Skills as chrome chips */}
+          <div className="mt-9">
+            <p className="label mb-4">Stack</p>
             <div className="flex flex-wrap gap-2">
               {skills.map((s) => (
-                <span key={s} className="sketch-tag">{s}</span>
+                <span key={s} className="chip">{s}</span>
               ))}
             </div>
           </div>
 
           <a
             href="mailto:charles_ow@berkeley.edu"
-            className="inline-flex items-center gap-2 mt-8 text-sm"
-            style={{ fontFamily: "var(--font-caveat)", fontSize: "1.05rem", color: "var(--blue-ink)", textDecoration: "none" }}
+            className="mono inline-flex items-center gap-1.5 mt-9 group"
+            style={{ color: "var(--silver)", fontSize: "0.8rem", letterSpacing: "0.04em", textDecoration: "none", transition: "color 0.2s ease" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--white)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--silver)")}
           >
-            charles_ow@berkeley.edu →
+            charles_ow@berkeley.edu
+            <ArrowUpRight size={14} strokeWidth={1.75} />
           </a>
         </div>
 
         {/* Right — stats bento */}
         <div ref={rightRef}>
-          <div
-            ref={statsRef}
-            className="grid grid-cols-2 gap-3"
-          >
-            {stats.map((s, i) => (
+          <div ref={statsRef} className="grid grid-cols-2 gap-3">
+            {stats.map((s) => (
               <div
                 key={s.label}
-                className="rounded-sm p-5 flex flex-col justify-between"
-                style={{
-                  background: "var(--paper)",
-                  border: "1px solid var(--sketch-border)",
-                  minHeight: 140,
-                  boxShadow: "2px 3px 10px rgba(0,0,0,0.06)",
-                  transform: `rotate(${["-0.4deg","0.5deg","-0.3deg","0.4deg"][i]})`,
-                }}
+                className="card edge-top sheen p-5 flex flex-col justify-between"
+                style={{ minHeight: 140 }}
               >
                 <span
+                  className="chrome-text"
                   style={{
-                    fontFamily: "var(--font-dancing)",
-                    fontSize: "clamp(2.4rem, 4vw, 3.6rem)",
-                    color: "var(--blue-ink)",
+                    fontFamily: "var(--sans)",
+                    fontWeight: 700,
+                    fontSize: "clamp(2.1rem, 3.6vw, 3.2rem)",
+                    letterSpacing: "-0.03em",
                     lineHeight: 1,
                   }}
                 >
                   {s.value}
                 </span>
-                <span className="text-xs uppercase tracking-[0.15em] mt-3 block" style={{ color: "var(--pencil)", fontFamily: "var(--font-caveat)" }}>
-                  {s.label}
-                </span>
+                <span className="label mt-3 block">{s.label}</span>
               </div>
             ))}
           </div>
 
-          {/* Decorative doodle below stats */}
-          <div className="mt-6 flex items-center gap-3 opacity-30">
-            <svg width="120" height="20" viewBox="0 0 120 20">
-              <path d="M 0 10 C 15 6 30 14 45 10 C 60 6 75 14 90 10 C 100 7 110 11 120 10"
-                stroke="var(--pencil)" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+          {/* Chrome tick / coordinate decoration */}
+          <div className="mt-7 flex items-center gap-3" style={{ opacity: 0.7 }}>
+            <svg width="150" height="14" viewBox="0 0 150 14" fill="none" aria-hidden="true">
+              <line x1="0" y1="11" x2="150" y2="11" stroke="var(--line-2)" strokeWidth="1" />
+              {[0, 24, 48, 72, 96, 120, 144].map((x, i) => (
+                <line
+                  key={x}
+                  x1={x}
+                  y1={i === 2 ? 3 : 6}
+                  x2={x}
+                  y2="11"
+                  stroke={i === 2 ? "var(--silver)" : "var(--line-3)"}
+                  strokeWidth="1"
+                />
+              ))}
             </svg>
-            <svg width="16" height="16" viewBox="0 0 16 16">
-              <circle cx="8" cy="8" r="6" stroke="var(--pencil)" strokeWidth="1.2" fill="none" />
-              <circle cx="8" cy="8" r="2" fill="var(--pencil)" />
-            </svg>
+            <span className="label tabular">37.8719°N · 122.2585°W</span>
           </div>
         </div>
       </div>

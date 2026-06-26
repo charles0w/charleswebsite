@@ -18,7 +18,7 @@ const featured = [
     link: "https://redline-henna.vercel.app",
     previewUrl: "https://redline-henna.vercel.app",
     accent: "#C44444",
-    span: "col-span-2 row-span-1",
+    span: "md:col-span-2 md:row-span-1",
     mockup: "iframe" as const,
     rotate: "-0.6deg",
   },
@@ -30,7 +30,7 @@ const featured = [
     link: "#",
     previewUrl: null,
     accent: "#1A3A80",
-    span: "col-span-1 row-span-2",
+    span: "md:col-span-1 md:row-span-2",
     mockup: "trading" as const,
     rotate: "0.5deg",
   },
@@ -42,7 +42,7 @@ const featured = [
     link: "#",
     previewUrl: null,
     accent: "#6B3A8A",
-    span: "col-span-1 row-span-1",
+    span: "md:col-span-1 md:row-span-1",
     mockup: "chat" as const,
     rotate: "-0.4deg",
   },
@@ -54,7 +54,7 @@ const featured = [
     link: "#",
     previewUrl: null,
     accent: "#1A6B4A",
-    span: "col-span-1 row-span-1",
+    span: "md:col-span-1 md:row-span-1",
     mockup: "website" as const,
     rotate: "0.3deg",
   },
@@ -86,6 +86,37 @@ const more = [
     accent: "#1A5A6A",
   },
 ];
+
+/* ─── accent helpers — brighten the per-project hues so they pop on near-black ── */
+
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const n = parseInt(full, 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function lighten(hex: string, amt: number): string {
+  const [r, g, b] = hexToRgb(hex);
+  const L = (c: number) => Math.round(c + (255 - c) * amt);
+  return `rgb(${L(r)}, ${L(g)}, ${L(b)})`;
+}
+function tint(hex: string, alpha: number): string {
+  const [r, g, b] = hexToRgb(hex);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+function lightenTint(hex: string, amt: number, alpha: number): string {
+  const [r, g, b] = hexToRgb(hex);
+  const L = (c: number) => Math.round(c + (255 - c) * amt);
+  return `rgba(${L(r)}, ${L(g)}, ${L(b)}, ${alpha})`;
+}
+/* tinted .chip override for a project type pill */
+function typeChipStyle(accent: string) {
+  return {
+    color: lighten(accent, 0.36),
+    borderColor: lightenTint(accent, 0.18, 0.4),
+    background: tint(accent, 0.1),
+  } as const;
+}
 
 /* ─── CSS mockup previews ──────────────────────────────────────── */
 
@@ -199,12 +230,12 @@ function IframePreview({ url }: { url: string }) {
 
 function BrowserChrome({ domain }: { domain: string }) {
   return (
-    <div className="absolute top-0 left-0 right-0 z-30 flex items-center gap-1.5 px-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ height: 26, background: "rgba(14,14,14,0.97)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+    <div className="absolute top-0 left-0 right-0 z-30 flex items-center gap-1.5 px-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ height: 26, background: "rgba(8,8,10,0.97)", borderBottom: "1px solid var(--line-2)" }}>
       <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: "#FF5F57" }} />
       <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: "#FFBD2E" }} />
       <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: "#28CA41" }} />
-      <div className="ml-1.5 flex-1 h-4 rounded flex items-center px-2" style={{ background: "rgba(255,255,255,0.05)" }}>
-        <span className="text-[8px] truncate" style={{ color: "rgba(255,255,255,0.3)" }}>{domain}</span>
+      <div className="ml-1.5 flex-1 h-4 rounded flex items-center px-2" style={{ background: "var(--glass-2)" }}>
+        <span className="text-[8px] truncate mono" style={{ color: "var(--txt-dim)" }}>{domain}</span>
       </div>
     </div>
   );
@@ -214,23 +245,15 @@ function BrowserChrome({ domain }: { domain: string }) {
 
 type FP = (typeof featured)[0];
 
-function FeaturedCard({ p, onRef }: { p: FP; onRef: (el: HTMLDivElement | null) => void }) {
+function FeaturedCard({ p, index, onRef }: { p: FP; index: number; onRef: (el: HTMLDivElement | null) => void }) {
   const domain = p.previewUrl ? new URL(p.previewUrl).hostname : "preview";
+  const isLive = p.link !== "#";
   return (
     <div
       ref={onRef}
-      className={`${p.span} proj-card relative rounded-sm overflow-hidden cursor-pointer group`}
-      style={{
-        background: "var(--paper)",
-        border: "1px solid var(--sketch-border)",
-        boxShadow: "2px 3px 14px rgba(0,0,0,0.08)",
-        transform: `rotate(${p.rotate})`,
-      }}
+      className={`${p.span} card edge-top relative overflow-hidden cursor-pointer group`}
     >
-      {/* Tape strip at top of preview */}
-      <div className="tape-strip absolute top-0 left-1/2 -translate-x-1/2 z-20 w-14" style={{ width: 56 }} />
-
-      {/* Preview area — dark digital window in paper card */}
+      {/* Preview area — dark digital window */}
       <div className="relative overflow-hidden" style={{ height: "55%" }}>
         {p.mockup === "iframe" && p.previewUrl ? (
           <IframePreview url={p.previewUrl} />
@@ -244,58 +267,78 @@ function FeaturedCard({ p, onRef }: { p: FP; onRef: (el: HTMLDivElement | null) 
         <BrowserChrome domain={domain} />
 
         {/* Hover: lift the dark veil over the preview */}
-        <div className="absolute inset-0 z-10 transition-opacity duration-500" style={{ background: "rgba(0,0,0,0.38)" }} />
-        <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: "rgba(0,0,0,0)" }} />
+        <div
+          className="absolute inset-0 z-10 transition-opacity duration-500 group-hover:opacity-0"
+          style={{ background: "linear-gradient(180deg, rgba(3,3,4,0.42), rgba(3,3,4,0.6))" }}
+        />
+
+        {/* mono index tick — command-center detail */}
+        <span
+          className="absolute top-1.5 left-2.5 z-20 label transition-opacity duration-300 group-hover:opacity-0"
+          style={{ fontSize: 9, color: "var(--txt-mid)" }}
+        >
+          {String(index + 1).padStart(2, "0")}
+        </span>
       </div>
 
-      {/* Paper content area */}
+      {/* thin chrome divider between preview and content */}
+      <div className="divider absolute z-20" style={{ left: 14, right: 14, top: "55%", width: "auto" }} />
+
+      {/* Content area */}
       <div className="p-4 relative z-10">
-        <div className="flex items-start justify-between gap-2 mb-1.5">
-          <span
-            className="sketch-tag"
-            style={{ color: p.accent, borderColor: `${p.accent}45`, background: `${p.accent}10` }}
-          >
-            {p.type}
+        <div className="flex items-center gap-2 mb-2">
+          <span className="chip" style={typeChipStyle(p.accent)}>{p.type}</span>
+
+          <span className="ml-auto flex items-center gap-1.5 label" style={{ fontSize: 8.5, letterSpacing: "0.18em" }}>
+            <span
+              className="w-1.5 h-1.5 rounded-full pulse-soft"
+              style={{ background: isLive ? "var(--ok)" : lighten(p.accent, 0.32) }}
+            />
+            {isLive ? "LIVE" : "BUILD"}
           </span>
-          {p.link !== "#" && (
+
+          {isLive && (
             <a
               href={p.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-6 h-6 rounded flex items-center justify-center flex-shrink-0"
-              style={{ background: p.accent, color: "#fff" }}
+              aria-label={`Open ${p.title}`}
+              className="sheen opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0"
+              style={{ background: "var(--glass-2)", border: `1px solid ${lightenTint(p.accent, 0.2, 0.5)}`, color: lighten(p.accent, 0.36) }}
               onClick={(e) => e.stopPropagation()}
             >
-              <ArrowUpRight size={12} />
+              <ArrowUpRight size={13} />
             </a>
           )}
         </div>
 
         <h3
           style={{
-            fontFamily: "var(--font-caveat)",
-            fontSize: "clamp(1.15rem, 1.8vw, 1.5rem)",
-            color: "var(--ink)",
+            fontFamily: "var(--sans)",
+            fontWeight: 600,
+            fontSize: "clamp(1.1rem, 1.7vw, 1.45rem)",
+            letterSpacing: "-0.01em",
+            color: "var(--white)",
             lineHeight: 1.2,
-            marginBottom: 4,
+            marginBottom: 6,
           }}
         >
           {p.title}
         </h3>
 
-        <p className="text-xs leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300 mb-2.5" style={{ color: "var(--ink-mid)", maxWidth: 300, fontFamily: "var(--font-lato)" }}>
+        <p
+          className="text-xs leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300 mb-3"
+          style={{ color: "var(--txt-mid)", maxWidth: 320 }}
+        >
           {p.description}
         </p>
 
         <div className="flex flex-wrap gap-1.5">
           {p.tags.map((t) => (
-            <span key={t} className="sketch-tag">{t}</span>
+            <span key={t} className="chip">{t}</span>
           ))}
         </div>
       </div>
-
-      {/* Hand-drawn underline between preview and content */}
-      <div className="absolute sketch-divider" style={{ left: 12, right: 12, top: "55%" }} />
     </div>
   );
 }
@@ -338,30 +381,49 @@ export default function Work() {
       id="work"
       ref={sectionRef}
       className="relative w-full"
-      style={{ paddingBlock: "clamp(5rem, 12vw, 9rem)", paddingLeft: "clamp(5rem, 10vw, 9rem)", paddingRight: "clamp(2rem, 6vw, 5rem)" }}
+      style={{
+        paddingBlock: "clamp(5rem, 12vw, 9rem)",
+        paddingLeft: "clamp(5rem, 10vw, 9rem)",
+        paddingRight: "clamp(2rem, 6vw, 5rem)",
+        borderTop: "1px solid var(--line)",
+      }}
     >
       {/* Header */}
       <div ref={headRef} className="mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-6 max-w-screen-xl mx-auto">
         <div>
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-3" style={{ fontFamily: "var(--font-caveat)", color: "var(--pencil)" }}>
-            What I Build
-          </p>
-          <h2 className="sketch-ul leading-tight" style={{ fontFamily: "var(--font-caveat)", fontSize: "clamp(2.4rem, 5vw, 4.2rem)", color: "var(--ink)" }}>
+          <p className="label mb-3">What I Build</p>
+          <h2
+            className="leading-[1.04]"
+            style={{
+              fontFamily: "var(--sans)",
+              fontWeight: 700,
+              fontSize: "clamp(2.4rem, 5vw, 4.2rem)",
+              letterSpacing: "-0.03em",
+              color: "var(--white)",
+            }}
+          >
             Projects that ship.
           </h2>
+          <div className="divider-glow mt-5" style={{ maxWidth: 168 }} />
         </div>
-        <a href="https://github.com/charles0w" target="_blank" rel="noopener noreferrer"
-          style={{ fontFamily: "var(--font-caveat)", fontSize: "1.05rem", color: "var(--blue-ink)", textDecoration: "none" }}>
-          View GitHub →
+        <a
+          href="https://github.com/charles0w"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mono inline-flex items-center gap-2 transition-colors text-[13px] tracking-[0.04em] [color:var(--silver)] hover:[color:var(--white)]"
+          style={{ textDecoration: "none" }}
+        >
+          View GitHub
+          <ArrowUpRight size={14} />
         </a>
       </div>
 
       {/* Bento grid */}
-      <div className="max-w-screen-xl mx-auto grid gap-4 mb-4"
-        style={{ gridTemplateColumns: "repeat(3, 1fr)", gridAutoRows: "300px", gridAutoFlow: "dense" }}
+      <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mb-4"
+        style={{ gridAutoRows: "300px", gridAutoFlow: "dense" }}
       >
         {featured.map((p, i) => (
-          <FeaturedCard key={p.title} p={p} onRef={(el) => { cardsRef.current[i] = el; }} />
+          <FeaturedCard key={p.title} p={p} index={i} onRef={(el) => { cardsRef.current[i] = el; }} />
         ))}
       </div>
 
@@ -371,20 +433,30 @@ export default function Work() {
           <div
             key={p.title}
             ref={(el) => { moreRef.current[i] = el; }}
-            className="proj-card rounded-sm p-5 flex flex-col gap-3"
-            style={{ background: "var(--paper)", border: "1px solid var(--sketch-border)", boxShadow: "2px 3px 10px rgba(0,0,0,0.06)", transform: `rotate(${i % 2 === 0 ? "0.3deg" : "-0.3deg"})` }}
+            className="card edge-top p-5 flex flex-col gap-3"
           >
             <div
-              className="h-1 rounded-full"
-              style={{ background: `linear-gradient(90deg, ${p.accent} 0%, transparent 100%)` }}
+              className="h-[2px] rounded-full"
+              style={{ background: `linear-gradient(90deg, ${lighten(p.accent, 0.3)} 0%, transparent 92%)` }}
             />
             <div className="flex items-center justify-between">
-              <span className="sketch-tag" style={{ color: p.accent, borderColor: `${p.accent}45`, background: `${p.accent}10` }}>{p.type}</span>
+              <span className="chip" style={typeChipStyle(p.accent)}>{p.type}</span>
             </div>
-            <h3 style={{ fontFamily: "var(--font-caveat)", fontSize: "1.3rem", color: "var(--ink)", lineHeight: 1.2 }}>{p.title}</h3>
-            <p className="text-sm leading-relaxed flex-1" style={{ color: "var(--ink-mid)", fontFamily: "var(--font-lato)" }}>{p.description}</p>
+            <h3
+              style={{
+                fontFamily: "var(--sans)",
+                fontWeight: 600,
+                fontSize: "1.3rem",
+                letterSpacing: "-0.01em",
+                color: "var(--white)",
+                lineHeight: 1.2,
+              }}
+            >
+              {p.title}
+            </h3>
+            <p className="text-sm leading-relaxed flex-1" style={{ color: "var(--txt-mid)" }}>{p.description}</p>
             <div className="flex flex-wrap gap-1.5 mt-auto">
-              {p.tags.map((t) => <span key={t} className="sketch-tag">{t}</span>)}
+              {p.tags.map((t) => <span key={t} className="chip">{t}</span>)}
             </div>
           </div>
         ))}

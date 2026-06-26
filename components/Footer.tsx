@@ -24,25 +24,31 @@ export default function Footer() {
     <footer
       className="relative w-full"
       style={{
-        background: "var(--paper-3)",
-        borderTop: "1.5px solid var(--sketch-border)",
+        background: "var(--panel)",
+        borderTop: "1px solid var(--line)",
         paddingBlock: "clamp(4rem, 8vw, 6rem)",
-        paddingLeft: "clamp(5rem, 10vw, 9rem)",
-        paddingRight: "clamp(2rem, 6vw, 5rem)",
+        paddingLeft: "clamp(1.5rem, 6vw, 4rem)",
+        paddingRight: "clamp(1.5rem, 6vw, 4rem)",
       }}
     >
       <div className="max-w-screen-xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-12">
           {/* Brand signature */}
           <div className="max-w-xs">
-            <p style={{ fontFamily: "var(--font-dancing)", fontSize: "2.8rem", color: "var(--ink)", lineHeight: 1 }}>
+            <p
+              className="chrome-text"
+              style={{
+                fontFamily: "var(--sans)",
+                fontWeight: 700,
+                fontSize: "2.6rem",
+                lineHeight: 1,
+                letterSpacing: "-0.02em",
+              }}
+            >
               CEO
             </p>
-            <div
-              className="mt-1 mb-4 h-0.5 w-16 rounded-full"
-              style={{ background: "var(--sketch-border)" }}
-            />
-            <p className="text-sm leading-relaxed" style={{ color: "var(--ink-mid)", fontFamily: "var(--font-lato)" }}>
+            <div className="divider-glow mt-3 mb-5" style={{ width: "4rem" }} />
+            <p className="text-sm leading-relaxed" style={{ color: "var(--txt-mid)" }}>
               UC Berkeley. Builder. Gearhead.
               <br />
               Building the future one project at a time.
@@ -53,9 +59,7 @@ export default function Footer() {
           <div className="grid grid-cols-3 gap-10 md:gap-16">
             {Object.entries(links).map(([group, items]) => (
               <div key={group}>
-                <p className="text-xs uppercase tracking-[0.18em] mb-4" style={{ color: "var(--pencil)", fontFamily: "var(--font-caveat)" }}>
-                  {group}
-                </p>
+                <p className="label mb-5">{group}</p>
                 <ul className="flex flex-col gap-3">
                   {items.map((item) => (
                     <li key={item.label}>
@@ -63,9 +67,15 @@ export default function Footer() {
                         href={item.href}
                         target={item.href.startsWith("http") ? "_blank" : undefined}
                         rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                        style={{ fontFamily: "var(--font-caveat)", fontSize: "1rem", color: "var(--ink-mid)", textDecoration: "none", transition: "color 0.2s" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ink-mid)")}
+                        style={{
+                          fontFamily: "var(--sans)",
+                          fontSize: "14px",
+                          color: "var(--txt-mid)",
+                          textDecoration: "none",
+                          transition: "color 0.2s",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = "var(--white)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = "var(--txt-mid)")}
                       >
                         {item.label}
                       </a>
@@ -78,11 +88,12 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-14 pt-5 flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderTop: "1px solid var(--sketch-border)" }}>
-          <p className="text-xs" style={{ color: "var(--pencil)", fontFamily: "var(--font-caveat)" }}>
-            &copy; {year} Charles Ow &mdash; Built with Next.js &amp; GSAP
+        <div className="divider mt-14" />
+        <div className="pt-5 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="label" style={{ color: "var(--txt-dim)", whiteSpace: "normal" }}>
+            &copy; {year}{" "}Charles Ow &mdash; Built with Next.js &amp; GSAP
           </p>
-          <p className="text-xs" style={{ color: "var(--pencil)", fontFamily: "var(--font-caveat)" }}>
+          <p className="label" style={{ color: "var(--txt-dim)", textTransform: "none" }}>
             charles_ow@berkeley.edu
           </p>
         </div>

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowUpRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -10,22 +11,19 @@ const games = [
   {
     name: "Pokemon",
     note: "Vintage holos, PSA slabs, set collection",
-    accent: "#F59E0B",
-    bg: "linear-gradient(135deg, rgba(245,158,11,0.14) 0%, rgba(13,13,13,0) 70%)",
+    accent: "var(--gold)",
     icon: "P",
   },
   {
     name: "One Piece",
     note: "OP-01 through current, Japanese pulls",
-    accent: "#EF4444",
-    bg: "linear-gradient(135deg, rgba(239,68,68,0.14) 0%, rgba(13,13,13,0) 70%)",
+    accent: "var(--red)",
     icon: "OP",
   },
   {
     name: "Market Arbitrage",
     note: "eBay · TCGPlayer · price delta tracking",
-    accent: "#10B981",
-    bg: "linear-gradient(135deg, rgba(16,185,129,0.14) 0%, rgba(13,13,13,0) 70%)",
+    accent: "var(--green)",
     icon: "$",
   },
 ];
@@ -62,38 +60,41 @@ export default function CardsSection() {
       style={{
         background: "var(--bg)",
         paddingBlock: "clamp(5rem, 12vw, 9rem)",
-        borderTop: "1px solid var(--border)",
+        borderTop: "1px solid var(--line)",
       }}
     >
       <div className="max-w-screen-xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           {/* Left text */}
           <div ref={headRef}>
-            <p className="text-xs font-semibold tracking-[0.25em] uppercase mb-4" style={{ color: "#F59E0B" }}>
+            <p className="label mb-4" style={{ color: "var(--gold)" }}>
               Trading Cards
             </p>
-            <h2 className="font-black leading-[1.05] tracking-[-0.025em]" style={{ fontSize: "clamp(2.4rem, 5vw, 4.2rem)" }}>
+            <h2
+              className="leading-[1.05] tracking-[-0.025em]"
+              style={{ fontFamily: "var(--sans)", fontWeight: 700, color: "var(--white)", fontSize: "clamp(2.4rem, 5vw, 4.2rem)" }}
+            >
               Part collector.
               <br />
-              <span style={{ color: "#F59E0B" }}>Part arbitrageur.</span>
+              <span style={{ color: "var(--gold)" }}>Part arbitrageur.</span>
             </h2>
-            <p className="mt-6 text-base leading-relaxed max-w-lg" style={{ color: "var(--muted)" }}>
+            <p className="mt-6 text-base leading-relaxed max-w-lg" style={{ color: "var(--txt-mid)" }}>
               I collect Pokemon and One Piece cards — but the interesting part is the
               market structure. Prices on eBay and TCGPlayer are systematically inefficient,
               especially for Japanese pulls and sealed products. I built tools to track those
               price deltas and find undervalued cards before the market corrects.
             </p>
-            <p className="mt-4 text-base leading-relaxed max-w-lg" style={{ color: "var(--muted)" }}>
+            <p className="mt-4 text-base leading-relaxed max-w-lg" style={{ color: "var(--txt-mid)" }}>
               It&rsquo;s the same pattern recognition that drives the trading bot — just applied
               to cardboard instead of derivatives.
             </p>
             <a
               href="#work"
               onClick={() => window.location.href = "/#work"}
-              className="inline-flex items-center gap-2 mt-6 text-sm font-semibold transition-all hover:gap-3"
-              style={{ color: "#F59E0B" }}
+              className="mono inline-flex items-center gap-2 mt-6 text-sm font-medium uppercase tracking-[0.1em] transition-all hover:gap-3"
+              style={{ color: "var(--gold)" }}
             >
-              See TCGAuto &amp; Card Arbitrage &#8594;
+              See TCGAuto &amp; Card Arbitrage <ArrowUpRight size={15} />
             </a>
           </div>
 
@@ -103,18 +104,22 @@ export default function CardsSection() {
               <div
                 key={g.name}
                 ref={(el) => { if (el) cardsRef.current[i] = el; }}
-                className="rounded-2xl p-6 flex items-center gap-6"
-                style={{ background: "var(--bg2)", border: "1px solid var(--border)", backgroundImage: g.bg }}
+                className="card edge-top sheen p-6 flex items-center gap-6"
+                style={{ backgroundImage: `linear-gradient(135deg, color-mix(in srgb, ${g.accent} 13%, transparent) 0%, transparent 70%)` }}
               >
                 <div
-                  className="w-14 h-14 rounded-xl flex items-center justify-center font-black text-lg flex-shrink-0"
-                  style={{ background: `${g.accent}20`, color: g.accent, border: `1px solid ${g.accent}30` }}
+                  className="w-14 h-14 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0"
+                  style={{
+                    background: `color-mix(in srgb, ${g.accent} 16%, transparent)`,
+                    color: g.accent,
+                    border: `1px solid color-mix(in srgb, ${g.accent} 32%, transparent)`,
+                  }}
                 >
                   {g.icon}
                 </div>
                 <div>
-                  <h3 className="font-bold text-white text-lg tracking-tight">{g.name}</h3>
-                  <p className="text-sm mt-0.5" style={{ color: "var(--muted)" }}>{g.note}</p>
+                  <h3 className="font-semibold text-lg tracking-tight" style={{ color: "var(--white)" }}>{g.name}</h3>
+                  <p className="text-sm mt-0.5" style={{ color: "var(--txt-mid)" }}>{g.note}</p>
                 </div>
               </div>
             ))}

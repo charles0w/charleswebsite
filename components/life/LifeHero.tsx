@@ -38,14 +38,15 @@ export default function LifeHero() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full overflow-hidden dot-grid"
+      className="relative w-full overflow-hidden"
       style={{ height: "80svh", minHeight: "560px", background: "var(--bg)" }}
     >
+      {/* soft silver radial glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 80% 60% at 50% 70%, rgba(26,140,255,0.08) 0%, transparent 70%)",
+            "radial-gradient(ellipse 80% 60% at 50% 70%, rgba(215,218,226,0.06) 0%, transparent 70%)",
         }}
       />
       <div
@@ -57,15 +58,10 @@ export default function LifeHero() {
       />
 
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
-        <div ref={tagRef} className="mb-6 flex items-center gap-3">
-          <span className="block w-8 h-px" style={{ background: "var(--accent)" }} />
-          <span
-            className="text-xs font-semibold tracking-[0.28em] uppercase"
-            style={{ color: "var(--accent)" }}
-          >
-            Cars &middot; Cards &middot; Finance
-          </span>
-          <span className="block w-8 h-px" style={{ background: "var(--accent)" }} />
+        <div ref={tagRef} className="mb-7 flex items-center gap-4">
+          <span className="block w-9 h-px" style={{ background: "var(--line-2)" }} />
+          <span className="label">Cars &middot; Cards &middot; Finance</span>
+          <span className="block w-9 h-px" style={{ background: "var(--line-2)" }} />
         </div>
 
         <div
@@ -74,8 +70,8 @@ export default function LifeHero() {
           style={{ maxWidth: "min(92vw, 1000px)" }}
         >
           <h1
-            className="font-black text-white leading-[0.92] tracking-[-0.03em]"
-            style={{ fontSize: "clamp(3.5rem, 9vw, 9rem)" }}
+            className="chrome-text chrome-text-anim leading-[0.92] tracking-[-0.03em]"
+            style={{ fontFamily: "var(--sans)", fontWeight: 700, fontSize: "clamp(3.5rem, 9vw, 9rem)" }}
           >
             <span className="block">Beyond</span>
             <span className="block">the Code.</span>
@@ -85,7 +81,7 @@ export default function LifeHero() {
         <p
           ref={subRef}
           className="mt-8 text-base md:text-lg max-w-md leading-relaxed"
-          style={{ color: "rgba(255,255,255,0.5)" }}
+          style={{ color: "var(--txt-mid)" }}
         >
           The obsessions, hobbies, and side projects that don&rsquo;t live on
           GitHub — but shape everything I build.

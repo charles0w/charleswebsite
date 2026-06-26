@@ -1,4 +1,4 @@
-/* Scrolling ticker strip between Hero and Work */
+/* Scrolling ticker strip between Hero and Work — chrome edition */
 
 const items = [
   "AI TOOLS",
@@ -13,20 +13,23 @@ const items = [
   "FULL-STACK",
 ];
 
-/* tiny car silhouette separator */
-function CarSep() {
+/* thin chrome diamond separator */
+function DiamondSep() {
   return (
     <svg
-      width="32" height="14" viewBox="0 0 32 14" fill="none"
-      style={{ opacity: 0.32, flexShrink: 0 }}
+      width="9"
+      height="9"
+      viewBox="0 0 10 10"
+      fill="none"
+      style={{ flexShrink: 0 }}
       aria-hidden
     >
       <path
-        d="M 1 9 C 1 7 3 5 5 4.5 L 8 4 C 9.5 3.5 11 2.5 12 1.5 L 15 0.5 C 16 0.2 20 0.2 21 0.5 L 23.5 2 C 24.5 3 25.5 4 27 5.5 L 30 7.5 C 31 8.5 31 9 31 9 L 26.5 9 Q 24 6 21.5 9 L 10.5 9 Q 8 6 5.5 9 Z"
-        stroke="var(--pencil)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"
+        d="M5 0.6 L9.4 5 L5 9.4 L0.6 5 Z"
+        stroke="var(--silver-2)"
+        strokeWidth="1"
+        strokeLinejoin="round"
       />
-      <path d="M 8 11 A 2.5 2.5 0 1 0 3 11 A 2.5 2.5 0 1 0 8 11" stroke="var(--pencil)" strokeWidth="0.9"/>
-      <path d="M 27 11 A 2.5 2.5 0 1 0 22 11 A 2.5 2.5 0 1 0 27 11" stroke="var(--pencil)" strokeWidth="0.9"/>
     </svg>
   );
 }
@@ -34,25 +37,34 @@ function CarSep() {
 function Row({ reverse = false }: { reverse?: boolean }) {
   const doubled = [...items, ...items];
   return (
-    <div className="overflow-hidden py-1.5">
-      <div className={`flex whitespace-nowrap items-center ${reverse ? "marquee-rev" : "marquee-fwd"}`} style={{ width: "max-content" }}>
+    <div className="overflow-hidden py-1">
+      <div
+        className={`flex whitespace-nowrap items-center ${reverse ? "marquee-rev" : "marquee-fwd"}`}
+        style={{ width: "max-content" }}
+      >
         {doubled.map((item, i) => (
           <span key={i} className="flex items-center gap-4 px-4">
             <span
-              className="text-xs font-bold tracking-[0.2em] uppercase"
+              className="mono"
               style={{
-                fontFamily: "var(--font-caveat)",
-                color: i % 3 === 1 ? "var(--blue-ink)" : "var(--pencil)",
-                opacity: i % 3 === 1 ? 0.75 : 0.45,
+                fontSize: "12px",
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: i % 2 === 0 ? "var(--txt-dim)" : "var(--silver)",
               }}
             >
               {item}
             </span>
-            {i % 4 === 0 ? <CarSep /> : (
+            {i % 3 === 0 ? (
+              <DiamondSep />
+            ) : (
               <span
-                className="w-1 h-1 rounded-full flex-shrink-0"
-                style={{ background: "var(--pencil)", opacity: 0.28 }}
-              />
+                className="mono"
+                style={{ color: "var(--txt-faint)", fontSize: "12px" }}
+                aria-hidden
+              >
+                /
+              </span>
             )}
           </span>
         ))}
@@ -64,16 +76,42 @@ function Row({ reverse = false }: { reverse?: boolean }) {
 export default function Marquee() {
   return (
     <div
-      className="w-full overflow-hidden"
+      className="relative w-full overflow-hidden"
       style={{
-        borderTop: "1px solid var(--sketch-border)",
-        borderBottom: "1px solid var(--sketch-border)",
-        background: "var(--paper-3)",
+        borderTop: "1px solid var(--line)",
+        borderBottom: "1px solid var(--line)",
+        background: "var(--panel-2)",
         paddingBlock: "8px",
       }}
     >
       <Row />
       <Row reverse />
+
+      {/* edge fade masks */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          left: 0,
+          width: "12%",
+          background: "linear-gradient(90deg, var(--panel-2), transparent)",
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          right: 0,
+          width: "12%",
+          background: "linear-gradient(270deg, var(--panel-2), transparent)",
+          pointerEvents: "none",
+        }}
+      />
     </div>
   );
 }

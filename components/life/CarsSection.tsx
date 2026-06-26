@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Calendar, MapPin } from "lucide-react";
+import { Calendar, MapPin, ArrowUpRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,21 +13,21 @@ const events = [
     date: "Every 3rd Saturday",
     location: "Berkeley Marina Parking Lot",
     tag: "Recurring",
-    accent: "#FF1A1A",
+    accent: "var(--red)",
   },
   {
     title: "Thunderhill Track Day",
     date: "June 2025",
     location: "Thunderhill Raceway, Willows CA",
     tag: "Track",
-    accent: "#FF6B35",
+    accent: "var(--gold)",
   },
   {
     title: "Redline Auto Show",
     date: "September 2025",
     location: "UC Berkeley Campus",
     tag: "Annual",
-    accent: "#FF1A1A",
+    accent: "var(--red)",
   },
 ];
 
@@ -67,26 +67,29 @@ export default function CarsSection() {
       ref={sectionRef}
       className="relative w-full"
       style={{
-        background: "var(--bg2)",
+        background: "var(--bg-2)",
         paddingBlock: "clamp(5rem, 12vw, 9rem)",
-        borderTop: "1px solid var(--border)",
+        borderTop: "1px solid var(--line)",
       }}
     >
       {/* Red ambient glow */}
       <div
         className="absolute top-0 left-0 w-96 h-96 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(255,26,26,0.08) 0%, transparent 70%)", filter: "blur(80px)" }}
+        style={{ background: "radial-gradient(circle, rgba(217,124,124,0.10) 0%, transparent 70%)", filter: "blur(80px)" }}
       />
 
       <div className="max-w-screen-xl mx-auto px-6 md:px-12">
         <div ref={headRef} className="mb-14">
-          <p className="text-xs font-semibold tracking-[0.25em] uppercase mb-4" style={{ color: "#FF1A1A" }}>
+          <p className="label mb-4" style={{ color: "var(--red)" }}>
             Cars &amp; Automotive
           </p>
-          <h2 className="font-black leading-[1.05] tracking-[-0.025em] max-w-xl" style={{ fontSize: "clamp(2.4rem, 5vw, 4.2rem)" }}>
+          <h2
+            className="leading-[1.05] tracking-[-0.025em] max-w-xl"
+            style={{ fontFamily: "var(--sans)", fontWeight: 700, color: "var(--white)", fontSize: "clamp(2.4rem, 5vw, 4.2rem)" }}
+          >
             Every drive should feel like it matters.
           </h2>
-          <p className="mt-6 text-base leading-relaxed max-w-2xl" style={{ color: "var(--muted)" }}>
+          <p className="mt-6 text-base leading-relaxed max-w-2xl" style={{ color: "var(--txt-mid)" }}>
             I co-founded Redline, UC Berkeley&rsquo;s automotive club. We run monthly car meets at the
             Berkeley Marina, track days at Thunderhill Raceway, and an annual show on campus that draws
             hundreds of enthusiasts from across the Bay Area.
@@ -95,10 +98,10 @@ export default function CarsSection() {
             href="https://redline-henna.vercel.app"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 mt-6 text-sm font-semibold transition-all hover:gap-3"
-            style={{ color: "#FF1A1A" }}
+            className="mono inline-flex items-center gap-2 mt-6 text-sm font-medium uppercase tracking-[0.1em] transition-all hover:gap-3"
+            style={{ color: "var(--red)" }}
           >
-            Visit Redline &#8594;
+            Visit Redline <ArrowUpRight size={15} />
           </a>
         </div>
 
@@ -110,40 +113,41 @@ export default function CarsSection() {
             { v: "40+", l: "Events hosted" },
             { v: "12", l: "Meets per year" },
           ].map((s) => (
-            <div key={s.l} className="rounded-xl p-5" style={{ background: "var(--bg3)", border: "1px solid var(--border)" }}>
-              <span className="font-black text-3xl tracking-tight block" style={{ color: "#FF1A1A" }}>{s.v}</span>
-              <span className="text-xs font-medium uppercase tracking-[0.15em] mt-2 block" style={{ color: "var(--muted)" }}>{s.l}</span>
+            <div key={s.l} className="card edge-top p-5">
+              <span className="tabular font-bold text-3xl tracking-tight block" style={{ color: "var(--red)" }}>{s.v}</span>
+              <span className="label mt-2 block">{s.l}</span>
             </div>
           ))}
         </div>
 
         {/* Upcoming events */}
-        <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-5" style={{ color: "var(--muted-dim)" }}>
-          Upcoming Events
-        </p>
+        <p className="label mb-5">Upcoming Events</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {events.map((ev, i) => (
             <div
               key={ev.title}
               ref={(el) => { if (el) cardsRef.current[i] = el; }}
-              className="rounded-2xl p-6"
-              style={{ background: "var(--bg3)", border: "1px solid var(--border)" }}
+              className="card edge-top p-6"
             >
               <span
-                className="text-[10px] font-bold tracking-[0.2em] uppercase px-2.5 py-1 rounded-full mb-4 inline-block"
-                style={{ background: `${ev.accent}22`, color: ev.accent }}
+                className="chip mb-4"
+                style={{
+                  color: ev.accent,
+                  background: `color-mix(in srgb, ${ev.accent} 12%, transparent)`,
+                  borderColor: `color-mix(in srgb, ${ev.accent} 32%, transparent)`,
+                }}
               >
                 {ev.tag}
               </span>
-              <h3 className="font-bold text-white text-lg tracking-tight mb-3">{ev.title}</h3>
+              <h3 className="font-semibold text-lg tracking-tight mb-3" style={{ color: "var(--white)" }}>{ev.title}</h3>
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2">
                   <Calendar size={12} style={{ color: ev.accent }} />
-                  <span className="text-xs font-medium" style={{ color: "var(--muted)" }}>{ev.date}</span>
+                  <span className="text-xs" style={{ color: "var(--txt-mid)" }}>{ev.date}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPin size={12} style={{ color: ev.accent }} />
-                  <span className="text-xs font-medium" style={{ color: "var(--muted)" }}>{ev.location}</span>
+                  <span className="text-xs" style={{ color: "var(--txt-mid)" }}>{ev.location}</span>
                 </div>
               </div>
             </div>
