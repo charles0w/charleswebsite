@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Space_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-const plexSans = IBM_Plex_Sans({
-  variable: "--font-plex-sans",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   display: "swap",
@@ -17,9 +17,9 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Charles Ow — Builder · Developer · Gearhead",
+  title: "Charles Ow — Command Center",
   description:
-    "UC Berkeley student building AI tools, trading systems, and ventures. Founder of Redline car club. A chrome-and-black command center for everything I ship.",
+    "Charles Ow — UC Berkeley Data Science + CS. A dark, chrome-on-black command center for a fleet of autonomous AI products spanning commerce, trading research, and tooling.",
 };
 
 export default function RootLayout({
@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${plexSans.variable} ${plexMono.variable} antialiased`}
+      className={`${spaceGrotesk.variable} ${plexMono.variable} antialiased`}
     >
       <body>{children}</body>
     </html>

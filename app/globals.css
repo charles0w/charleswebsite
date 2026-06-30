@@ -50,7 +50,7 @@
   --shadow-panel: 0 1px 0 rgba(255,255,255,0.03) inset, 0 24px 60px -28px rgba(0,0,0,0.9);
 
   /* ── type families (wired up via next/font in layout.tsx) ── */
-  --sans: var(--font-plex-sans), "IBM Plex Sans", system-ui, sans-serif;
+  --sans: var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
   --mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
@@ -71,17 +71,14 @@ body {
   font-family: var(--sans);
   font-size: 15px;
   line-height: 1.6;
-  color: var(--txt);
-  background:
-    radial-gradient(1100px 600px at 50% -12%, rgba(220,224,235,0.05), transparent 60%) fixed,
-    radial-gradient(820px 520px at 88% 110%, rgba(220,224,235,0.03), transparent 55%) fixed,
-    var(--bg);
-  min-height: 100dvh;
+  color: #cfd2d8;
+  background: #0a0a0c;
+  height: 100dvh;
+  overflow: hidden;
   position: relative;
-  overflow-x: hidden;
 }
 
-/* ── faint masked grid overlay (the signature canvas) ── */
+/* ── faint masked grid overlay (the command-center canvas) ── */
 body::before {
   content: "";
   position: fixed;
@@ -89,14 +86,15 @@ body::before {
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(230,232,240,0.022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(230,232,240,0.022) 1px, transparent 1px);
-  background-size: 54px 54px;
-  mask-image: radial-gradient(circle at 50% 20%, #000 0, transparent 78%);
-  -webkit-mask-image: radial-gradient(circle at 50% 20%, #000 0, transparent 78%);
+    linear-gradient(#13151a 1px, transparent 1px),
+    linear-gradient(90deg, #13151a 1px, transparent 1px);
+  background-size: 38px 38px;
+  opacity: 0.5;
+  mask-image: radial-gradient(ellipse 120% 90% at 50% 0%, #000 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 120% 90% at 50% 0%, #000 30%, transparent 80%);
 }
 
-::selection { background: rgba(215,218,226,0.25); color: #fff; }
+::selection { background: #3a4256; color: #f0f1f5; }
 
 /* ── dark scrollbar ── */
 ::-webkit-scrollbar { width: 11px; height: 11px; }
@@ -347,6 +345,27 @@ body::before {
 
 /* scanning line for "OS" feel */
 @keyframes scan-y { 0% { transform: translateY(-100%); } 100% { transform: translateY(2400%); } }
+
+/* ════════════════════════════════════════════════════════════════
+   COMMAND CENTER — prototype keyframes (lifted from the handoff)
+   ════════════════════════════════════════════════════════════════ */
+@keyframes chromeSheen { 0% { background-position: 0% 50%; } 100% { background-position: 220% 50%; } }
+@keyframes introSweep { 0% { transform: translateX(-130%) skewX(-12deg); } 100% { transform: translateX(160%) skewX(-12deg); } }
+@keyframes caretBlink { 0%, 48% { opacity: 1; } 49%, 100% { opacity: 0; } }
+@keyframes arrowPulse { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.7; } }
+@keyframes arrowBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
+@keyframes chipScan {
+  0%, 68%, 100% { color: #5b6068; border-color: #23262e; box-shadow: none; transform: translateY(0); }
+  10% { color: #f4f5f8; border-color: #7e828c; box-shadow: 0 0 22px rgba(190,198,214,.26); transform: translateY(-3px); }
+  24% { color: #aeb4be; border-color: #3a3f4a; box-shadow: 0 0 8px rgba(190,198,214,.08); transform: translateY(0); }
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+/* the single scroller owns the only scrollbar — keep it invisible like the prototype */
+[data-scroll-root]::-webkit-scrollbar { width: 0; height: 0; }
+[data-scroll-root] { scrollbar-width: none; }
 
 /* ════════════════════════════════════════════════════════════════
    ACCESSIBILITY
