@@ -17,9 +17,9 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Charles Ow — Command Center",
+  title: "Charles Ow",
   description:
-    "Charles Ow — UC Berkeley Data Science + CS. A dark, chrome-on-black command center for a fleet of autonomous AI products spanning commerce, trading research, and tooling.",
+    "Charles Ow — UC Berkeley Data Science + CS. I build AI that ships: growth-ops pipelines and LLM tooling at ICONIQ Capital by day, a fleet of autonomous AI products by night.",
 };
 
 export default function RootLayout({

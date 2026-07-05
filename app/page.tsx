@@ -1,5 +1,5 @@
-import CommandCenter from "@/components/CommandCenter";
+import LiquidChrome from "@/components/LiquidChrome";
 
 export default function Home() {
-  return <CommandCenter />;
+  return <LiquidChrome />;
 }
