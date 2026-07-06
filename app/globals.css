@@ -357,32 +357,11 @@ body {
   66% { transform: scale(1.16) translate(2%, -2.5%); }
 }
 @keyframes textFlow { 0%, 100% { background-size: 420% auto; } 50% { background-size: 600% auto; } }
-/* legacy — retained for reference */
 @keyframes letterIn {
   0% { opacity: 0; filter: blur(16px); transform: translateY(0.45em) scaleY(1.4); letter-spacing: 0.4em; }
   60% { opacity: 1; }
   100% { opacity: 1; filter: blur(0); transform: none; }
 }
-/* the name pours/solidifies out of the liquid metal, top-to-bottom */
-@keyframes letterForm {
-  0%   { opacity: 0; filter: blur(24px); transform: translateY(0.34em) scale(1.05); clip-path: inset(-25% 0 118% 0); }
-  55%  { opacity: 1; filter: blur(7px); clip-path: inset(-25% 0 -6% 0); }
-  100% { opacity: 1; filter: blur(0);  transform: none; clip-path: inset(-25% 0 -25% 0); }
-}
-/* a single bright specular streak that travels across the finished name */
-@keyframes specularSweep {
-  0%   { background-position: 220% 50%; opacity: 0; }
-  22%  { opacity: 1; }
-  100% { background-position: -70% 50%; opacity: 0; }
-}
-/* soft chrome bloom that swells behind the name as it forms */
-@keyframes bloomIn {
-  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
-  55%  { opacity: 0.9; }
-  100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-}
-/* hairlines draw outward from the tagline */
-@keyframes lineExpand { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
 @keyframes subIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 @keyframes cueBob { 0%, 100% { transform: translateY(0); opacity: .35; } 50% { transform: translateY(8px); opacity: .9; } }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }

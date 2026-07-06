@@ -300,13 +300,13 @@ export default function LiquidChrome() {
       raf = requestAnimationFrame(loop);
       // hand off from the CSS entrance image to the live shader
       window.setTimeout(() => {
-        cv.style.opacity = "0.7";
+        cv.style.opacity = "0.6";
         const fb = fallbackImgRef.current;
         if (fb) {
-          fb.style.transition = "opacity 2s ease";
-          window.setTimeout(() => { fb.style.opacity = "0"; }, 400);
+          fb.style.transition = "opacity 1.8s ease";
+          window.setTimeout(() => { fb.style.animation = "none"; fb.style.opacity = "0"; }, 300);
         }
-      }, 2000);
+      }, 2200);
     };
     img.src = "/chrome-flow.avif";
 
@@ -332,8 +332,6 @@ export default function LiquidChrome() {
         </div>
 
         <div ref={heroNameRef} style={{ position: "relative", textAlign: "center", zIndex: 2 }}>
-          {/* chrome bloom swelling behind the name */}
-          <div aria-hidden="true" style={{ position: "absolute", left: "50%", top: "48%", width: "76%", height: "150%", borderRadius: "50%", pointerEvents: "none", background: "radial-gradient(ellipse at center, rgba(220,224,235,0.22), rgba(180,188,205,0.08) 42%, transparent 68%)", filter: "blur(14px)", mixBlendMode: "screen", animation: "bloomIn 3s cubic-bezier(.2,.8,.2,1) 0.5s both" }} />
           <div style={{ position: "relative", fontSize: "clamp(52px, 11.5vw, 190px)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 0.9, whiteSpace: "nowrap" }}>
             {/* base chrome-gradient letters */}
             <div>
@@ -343,7 +341,7 @@ export default function LiquidChrome() {
                   backgroundImage: "linear-gradient(100deg,#e8eaf0,#9ea3ad 22%,#5f636c 42%,#dfe2ea 58%,#8a8e99 74%,#e8eaf0)",
                   backgroundSize: "220% auto", WebkitBackgroundClip: "text", backgroundClip: "text",
                   WebkitTextFillColor: "transparent", color: "transparent",
-                  animation: `letterForm 1.5s cubic-bezier(.2,.85,.25,1) ${l.delay} both, chromeSheen 7s linear 2.6s infinite`,
+                  animation: `letterIn 1.3s cubic-bezier(.2,.85,.25,1) ${l.delay} both, chromeSheen 7s linear 2.4s infinite`,
                   filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.7))",
                 }}>{l.ch}</span>
               ))}
@@ -355,27 +353,15 @@ export default function LiquidChrome() {
                   display: "inline-block", minWidth: l.minWidth,
                   backgroundImage: "url('/chrome-flow.avif')", backgroundSize: "420% auto", backgroundPosition: l.bgPos,
                   WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent",
-                  animation: `letterForm 1.5s cubic-bezier(.2,.85,.25,1) ${l.delay} both, textFlow 9s ease-in-out 2.6s infinite`,
-                }}>{l.ch}</span>
-              ))}
-            </div>
-            {/* one-shot specular streak that travels across the finished name */}
-            <div aria-hidden="true" style={{ position: "absolute", inset: 0, mixBlendMode: "screen", pointerEvents: "none" }}>
-              {NAME_LETTERS.map((l, i) => (
-                <span key={i} style={{
-                  display: "inline-block", minWidth: l.minWidth,
-                  backgroundImage: "linear-gradient(105deg, transparent 44%, rgba(255,255,255,0.95) 50%, transparent 56%)",
-                  backgroundSize: "260% auto", WebkitBackgroundClip: "text", backgroundClip: "text",
-                  WebkitTextFillColor: "transparent", color: "transparent", opacity: 0,
-                  animation: "specularSweep 1.7s cubic-bezier(.4,0,.2,1) 2.5s both",
+                  animation: `letterIn 1.3s cubic-bezier(.2,.85,.25,1) ${l.delay} both, textFlow 9s ease-in-out 2.4s infinite`,
                 }}>{l.ch}</span>
               ))}
             </div>
           </div>
-          <div style={{ marginTop: 34, display: "flex", alignItems: "center", justifyContent: "center", gap: 18 }}>
-            <span style={{ width: 44, height: 1, background: "linear-gradient(90deg,transparent,#4a505c)", transformOrigin: "right", animation: "lineExpand 1s cubic-bezier(.2,.8,.2,1) 2.5s both" }} />
-            <span style={{ fontFamily: MONO, fontSize: "clamp(10px,1.1vw,13px)", letterSpacing: "0.42em", color: "#84868f", animation: "subIn 1s ease 2.6s both" }}>BERKELEY · BUILDER · AI THAT SHIPS</span>
-            <span style={{ width: 44, height: 1, background: "linear-gradient(90deg,#4a505c,transparent)", transformOrigin: "left", animation: "lineExpand 1s cubic-bezier(.2,.8,.2,1) 2.5s both" }} />
+          <div style={{ marginTop: 34, display: "flex", alignItems: "center", justifyContent: "center", gap: 18, animation: "subIn 1s ease 2.4s both" }}>
+            <span style={{ width: 44, height: 1, background: "linear-gradient(90deg,transparent,#4a505c)" }} />
+            <span style={{ fontFamily: MONO, fontSize: "clamp(10px,1.1vw,13px)", letterSpacing: "0.42em", color: "#84868f" }}>BERKELEY · BUILDER · AI THAT SHIPS</span>
+            <span style={{ width: 44, height: 1, background: "linear-gradient(90deg,#4a505c,transparent)" }} />
           </div>
         </div>
 
