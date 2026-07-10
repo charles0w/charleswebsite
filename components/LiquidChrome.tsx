@@ -1,6 +1,7 @@
 "use client";
 
 import { CSSProperties, useEffect, useRef, useState } from "react";
+import SectionBreak from "./SectionBreak";
 
 /* ════════════════════════════════════════════════════════════════
    CHARLES OW — "LIQUID CHROME" (Revamp A)
@@ -390,6 +391,11 @@ export default function LiquidChrome() {
           ))}
         </div>
       </section>
+
+      {/* SECTION BREAK — chapter divider (Forever AI Components #282 "Block Reveal", chrome-recolored) */}
+      <div data-reveal style={{ position: "relative", zIndex: 1, padding: "6vh 7vw 12vh", maxWidth: 1500, margin: "0 auto" }}>
+        <SectionBreak label="INTERLUDE" lines={["Build", "Ship", "Repeat"]} ariaLabel="Build. Ship. Repeat." />
+      </div>
 
       {/* WORK — editorial index */}
       <section data-reveal style={{ position: "relative", zIndex: 1, padding: "8vh 7vw 14vh", maxWidth: 1500, margin: "0 auto" }}>

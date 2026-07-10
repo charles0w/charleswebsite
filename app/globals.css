@@ -371,6 +371,96 @@ body {
 [data-scroll-root] { scrollbar-width: none; }
 
 /* ════════════════════════════════════════════════════════════════
+   SECTION BREAK — "Block Reveal" chapter divider
+   Adapted from Forever AI Components #282 "Block Reveal"
+   (infinite/text-effects/05-block-reveal.html, MIT). Gold (#f5d76e)
+   recolored to the site's chrome ramp, Archivo swapped for --sans.
+   Reworked from the source's infinite loop into a play-once-on-scroll
+   reveal: the SectionBreak component adds `.is-in` when the block
+   enters view, and the sweep runs once and holds revealed
+   (animation-fill-mode: forwards). The paired block ⇄ reveal clip-path
+   keyframes are kept in sync per the source's forever-agent-meta.
+   ════════════════════════════════════════════════════════════════ */
+.sbreak {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.16em;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(34px, 10vmin, 88px);
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.sbreak-row { position: relative; overflow: hidden; }
+/* chrome text — hidden until the sweep reveals it */
+.sbreak-txt {
+  display: block;
+  background-image: linear-gradient(180deg, #ffffff 0%, #dfe2ea 30%, #9a9ea9 50%, #f0f2f6 58%, #b6bac4 78%, #8a8e99 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
+  clip-path: inset(0 100% 0 0);
+}
+/* the sweeping chrome block — zero-width until it sweeps in */
+.sbreak-blk {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--silver), var(--silver-2));
+  transform-origin: left center;
+  clip-path: inset(0 100% 0 0);
+}
+.sbreak::after {
+  content: "";
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  height: 1px;
+  bottom: -0.18em;
+  background: linear-gradient(90deg, transparent, rgba(215, 218, 226, 0.5), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* ── trigger: play the sweep once when scrolled into view, hold revealed ──
+   Front-loaded ease-out so the words wipe in promptly with the retracting
+   block (no back-loaded stall between the sweep and the reveal). */
+.sbreak.is-in .sbreak-txt { animation: sbreak-reveal 1s cubic-bezier(.33, 1, .68, 1) forwards; }
+.sbreak.is-in .sbreak-blk { animation: sbreak-block 1s cubic-bezier(.33, 1, .68, 1) forwards; }
+.sbreak.is-in::after      { animation: sbreak-rule 1s cubic-bezier(.33, 1, .68, 1) forwards; }
+.sbreak.is-in .sbreak-row:nth-child(2) .sbreak-txt,
+.sbreak.is-in .sbreak-row:nth-child(2) .sbreak-blk { animation-delay: .08s; }
+.sbreak.is-in .sbreak-row:nth-child(3) .sbreak-txt,
+.sbreak.is-in .sbreak-row:nth-child(3) .sbreak-blk { animation-delay: .16s; }
+
+/* block: sweep in from the left to cover, then retract off the right */
+@keyframes sbreak-block {
+  0%   { clip-path: inset(0 100% 0 0); }
+  45%  { clip-path: inset(0 0 0 0); }
+  100% { clip-path: inset(0 0 0 100%); }
+}
+/* text: revealed left-to-right in lockstep with the block retracting, then holds */
+@keyframes sbreak-reveal {
+  0%, 45% { clip-path: inset(0 100% 0 0); }
+  100%    { clip-path: inset(0 0 0 0); }
+}
+/* underline rule draws in as the text lands */
+@keyframes sbreak-rule {
+  0%, 50% { transform: scaleX(0); }
+  100%    { transform: scaleX(1); }
+}
+
+/* reduced-motion (and the global reduce guard): show text fully, drop the block */
+@media (prefers-reduced-motion: reduce) {
+  .sbreak-txt, .sbreak.is-in .sbreak-txt { clip-path: inset(0 0 0 0) !important; animation: none !important; }
+  .sbreak-blk { display: none; }
+  .sbreak::after, .sbreak.is-in::after { transform: scaleX(1) !important; animation: none !important; }
+}
+
+/* ════════════════════════════════════════════════════════════════
    ACCESSIBILITY
    ════════════════════════════════════════════════════════════════ */
 :focus-visible {
